@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Interfaz Unificada</title>
+  <style>
+    /* Estilos globales */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      color: #333;
+      display: flex;
+      background-color: #f2f2f2; /* Fondo suave */
+      height: 100vh; /* Para poder usar el 100vh con referencia directa */
+    }
+    
+    /* Barra lateral */
+    .sidebar {
+      width: 220px;
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 10px 15px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      overflow-y: auto; /* scroll si el contenido supera la pantalla */
+    }
+    
+    .nav-list, .submenu {
+      list-style: none;
+      padding-left: 0;
+    }
+    
+    /* Enlaces del menú principal */
+    .nav-list > li > a {
+      display: block;
+      color: #ecf0f1;
+      text-decoration: none;
+      padding: 10px 5px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .nav-list > li > a:hover {
+      background: #34495e;
+    }
+    
+    /* Submenú: inicialmente oculto (solo si usas plegado) */
+    .submenu {
+      display: none;
+      margin-left: 10px; /* Sangría */
+    }
+    .submenu li a {
+      display: block;
+      font-size: 14px;
+      padding: 8px 10px;
+      text-decoration: none;
+      color: #ecf0f1;
+      border-left: 3px solid transparent; 
+      margin-bottom: 2px;
+      cursor: pointer;
+    }
+    .submenu li a:hover {
+      background-color: #3e5370;
+      border-left: 3px solid #1abc9c;
+    }
+    
+    /* Contenedor principal */
+    .content {
+      margin-left: 220px; 
+      padding: 20px;
+      width: calc(100% - 220px);
+      height: 100vh; /* Para aprovechar toda la pantalla disponible */
+      overflow-y: auto;
+    }
+    
+    /* Secciones: ocultas por defecto; 
+       cada sección ocupa ancho 100% y calculamos la altura que queda */
+    .section {
+      background-color: #fff;
+      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: none;  /* Se muestra al llamar showSection(...) en JS */
+    }
+    .section h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+    
+    /* Ajustamos la altura del iframe: 
+       calc(100vh - 130px) => 
+       - 100vh: altura total de la ventana
+       - 130px: compensar menú superior, paddings, títulos, etc. 
+         Ajusta según tu diseño. */
+    .iframe-container {
+      width: 100%;
+      height: calc(100vh - 130px);
+      border: none;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra lateral -->
+  <div class="sidebar">
+    <ul class="nav-list">
+      <!-- Gestión de Ventas: muestra todo en una sola sección -->
+      <li>
+        <a data-section="ventas">Gestión de Ventas</a>
+      </li>
+      <!-- Gestión Operativa con submenú plegable -->
+      <li>
+        <a id="toggle-menu-operativa">Gestión Operativa</a>
+        <ul class="submenu" id="submenu-operativa">
+          <li><a data-section="seccion4">Horarios</a></li>
+          <li><a data-section="seccion5">Métricas operativas</a></li>
+          <li><a data-section="seccion6">Matriz</a></li>
+          <li><a data-section="seccion7">Gestión Interactivo</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Contenedor principal -->
+  <div class="content">
+
+    <!-- Sección única para Gestión de Ventas -->
+    <div id="ventas" class="section">
+      <h2>Base de administradores</h2>
+      <iframe
+        class="iframe-container"
+        src="http://10.31.32.252/portalsco/webpages/atv/retencion/consulta_base_cli_Adm.aspx">
+      </iframe>
+
+      <h2>Calificación Masiva</h2>
+      <iframe
+        class="iframe-container"
+        src="http://10.31.32.252/portalsco/webpages/atv/retencion/consulta_cupo_precalificado.aspx">
+      </iframe>
+
+      <h2>Cobranzas Corp</h2>
+      <iframe
+        class="iframe-container"
+        src="http://10.31.32.252/portalsco/webpages/atv/retencion/consulta_base_cobranza.aspx">
+      </iframe>
+
+      <h2>Ejecutivo</h2>
+      <iframe
+        class="iframe-container"
+        src="http://10.31.32.252/portalsco/webpages/atv/retencion/consulta_base_asignacion_clientes.aspx">
+      </iframe>
+    </div>
+
+    <!-- Secciones separadas de Gestión Operativa -->
+    <div id="seccion4" class="section">
+      <h2>Horarios</h2>
+      <iframe
+        class="iframe-container"
+        src="https://1drv.ms/x/c/d160bea50c5aa91e/IQT_XIkxzogDRqNx0M7uGBGGAQ81rSXzWdJz1W6nQu2KgFg?em=2&AllowTyping=True&wdInConfigurator=True&wdInConfigurator=True">
+      </iframe>
+    </div>
+
+    <div id="seccion5" class="section">
+      <h2>Métricas operativas</h2>
+      <iframe
+        class="iframe-container"
+        src="https://1drv.ms/x/c/d160bea50c5aa91e/IQQiw88N-DbOS43YVRshVmzWATG7FR-3YqYeqRgpPzeMpFs?em=2&AllowTyping=True&wdInConfigurator=True&wdInConfigurator=True">
+      </iframe>
+    </div>
+
+    <div id="seccion6" class="section">
+      <h2>Matriz</h2>
+      <iframe
+        class="iframe-container"
+        src="https://docs.google.com/spreadsheets/d/1Jrkkzi51LgUZoh7eaPmMwJteBsfbHybG/edit?gid=1782962698#gid=1782962698">
+      </iframe>
+    </div>
+
+    <div id="seccion7" class="section">
+      <h2>Gestión Interactivo</h2>
+      <iframe
+        class="iframe-container"
+       src="https://www.canva.com/design/DAGf9xJf8lQ/Lr8ruSLEQ0FD1-hkxzALew/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen">
+      </iframe>
+    </div>
+  </div>
+
+  <!-- Script para mostrar/ocultar secciones -->
+  <script>
+    // Oculta todas las secciones
+    function hideAllSections() {
+      document.querySelectorAll('.section').forEach(sec => {
+        sec.style.display = 'none';
+      });
+    }
+
+    // Muestra la sección solicitada
+    function showSection(sectionId) {
+      hideAllSections();
+      const target = document.getElementById(sectionId);
+      if (target) target.style.display = 'block';
+    }
+
+    // Muestra Gestión de Ventas por defecto
+    showSection('ventas');
+
+    // Submenú plegable de Gestión Operativa
+    const toggleMenuOperativa = document.getElementById('toggle-menu-operativa');
+    const submenuOperativa = document.getElementById('submenu-operativa');
+    toggleMenuOperativa.addEventListener('click', (e) => {
+      e.preventDefault();
+      submenuOperativa.style.display = 
+        (submenuOperativa.style.display === 'block') ? 'none' : 'block';
+    });
+
+    // Click en "Gestión de Ventas"
+    const linkVentas = document.querySelector('[data-section="ventas"]');
+    linkVentas.addEventListener('click', (e) => {
+      e.preventDefault();
+      showSection('ventas');
+    });
+
+    // Enlaces de Gestión Operativa
+    document.querySelectorAll('#submenu-operativa li a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const sectionId = link.getAttribute('data-section');
+        showSection(sectionId);
+      });
+    });
+  </script>
+</body>
+</html>
