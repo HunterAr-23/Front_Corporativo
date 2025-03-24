@@ -51,9 +51,9 @@
       background: #34495e;
     }
     
-    /* Submenú: inicialmente oculto (solo si usas plegado) */
+    /* Submenú: inicialmente oculto */
     .submenu {
-      display: none;
+      display: none; /* Cambiará a block con JS al desplegar */
       margin-left: 10px; /* Sangría */
     }
     .submenu li a {
@@ -80,15 +80,14 @@
       overflow-y: auto;
     }
     
-    /* Secciones: ocultas por defecto; 
-       cada sección ocupa ancho 100% y calculamos la altura que queda */
+    /* Secciones: ocultas por defecto */
     .section {
       background-color: #fff;
       margin-bottom: 20px;
       padding: 15px;
       border-radius: 6px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      display: none;  /* Se muestra al llamar showSection(...) en JS */
+      display: none;  /* Se mostrará con showSection(...) en JS */
     }
     .section h2 {
       font-size: 18px;
@@ -96,11 +95,7 @@
       color: #2c3e50;
     }
     
-    /* Ajustamos la altura del iframe: 
-       calc(100vh - 130px) => 
-       - 100vh: altura total de la ventana
-       - 130px: compensar menú superior, paddings, títulos, etc. 
-         Ajusta según tu diseño. */
+    /* Ajustamos la altura del iframe */
     .iframe-container {
       width: 100%;
       height: calc(100vh - 130px);
@@ -114,18 +109,28 @@
   <!-- Barra lateral -->
   <div class="sidebar">
     <ul class="nav-list">
-      <!-- Gestión de Ventas: muestra todo en una sola sección -->
+      <!-- Gestión de Ventas (sección única) -->
       <li>
-        <a data-section="ventas">Gestión de Ventas</a>
+        <a data-section="ventas" href="#">Gestión de Ventas</a>
       </li>
-      <!-- Gestión Operativa con submenú plegable -->
+
+      <!-- Gestión Operativa con submenú -->
       <li>
-        <a id="toggle-menu-operativa">Gestión Operativa</a>
+        <a id="toggle-menu-operativa" href="#">Gestión Operativa</a>
         <ul class="submenu" id="submenu-operativa">
-          <li><a data-section="seccion4">Horarios</a></li>
-          <li><a data-section="seccion5">Métricas operativas</a></li>
-          <li><a data-section="seccion6">Matriz</a></li>
-          <li><a data-section="seccion7">Gestión Interactivo</a></li>
+          <li><a data-section="seccion4" href="#">Horarios</a></li>
+          <li><a data-section="seccion5" href="#">Métricas operativas</a></li>
+          <li><a data-section="seccion6" href="#">Matriz</a></li>
+          <li><a data-section="seccion7" href="#">Gestión Interactivo</a></li>
+        </ul>
+      </li>
+
+      <!-- Gestión de Calidad con submenú -->
+      <li>
+        <a id="toggle-menu-calidad" href="#">Gestión de Calidad</a>
+        <ul class="submenu" id="submenu-calidad">
+          <li><a data-section="calidad-notas" href="#">Notas Inbound Unificado</a></li>
+          <li><a data-section="calidad-audios" href="#">Audios</a></li>
         </ul>
       </li>
     </ul>
@@ -161,7 +166,7 @@
       </iframe>
     </div>
 
-    <!-- Secciones separadas de Gestión Operativa -->
+    <!-- Secciones de Gestión Operativa -->
     <div id="seccion4" class="section">
       <h2>Horarios</h2>
       <iframe
@@ -190,48 +195,91 @@
       <h2>Gestión Interactivo</h2>
       <iframe
         class="iframe-container"
-       src="https://www.canva.com/design/DAGf9xJf8lQ/Lr8ruSLEQ0FD1-hkxzALew/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen">
+        src="https://www.canva.com/design/DAGf9xJf8lQ/Lr8ruSLEQ0FD1-hkxzALew/view?embed" 
+        allowfullscreen="allowfullscreen" 
+        allow="fullscreen">
       </iframe>
     </div>
+
+    <!-- Secciones de Gestión de Calidad -->
+    <div id="calidad-notas" class="section">
+      <h2>Notas Inbound Unificado</h2>
+      <!-- Ajustar la URL del iframe según sea necesario -->
+      <iframe
+        class="iframe-container"
+        src="https://1drv.ms/x/c/d160bea50c5aa91e/IQRcIUMHGvtxSp0KRf4flwhLARB3qn7gj4fob7uj7Od9uoE?em=2&AllowTyping=True&wdInConfigurator=True&wdInConfigurator=True">
+      </iframe>
+    </div>
+
+    <div id="calidad-audios" class="section">
+      <h2>Audios</h2>
+      <!-- Ajustar la URL del iframe según sea necesario -->
+      <iframe
+        class="iframe-container"
+        src="https://onedrive.live.com/?id=D160BEA50C5AA91E%21s70df62f0f468401fa0b8dc2471d6b3df&cid=D160BEA50C5AA91E">
+      </iframe>
+    </div>
+
   </div>
 
-  <!-- Script para mostrar/ocultar secciones -->
+  <!-- Script para mostrar/ocultar secciones y plegar submenús -->
   <script>
-    // Oculta todas las secciones
+    // 1. Función para ocultar todas las secciones
     function hideAllSections() {
       document.querySelectorAll('.section').forEach(sec => {
         sec.style.display = 'none';
       });
     }
 
-    // Muestra la sección solicitada
+    // 2. Función para mostrar la sección solicitada
     function showSection(sectionId) {
       hideAllSections();
       const target = document.getElementById(sectionId);
       if (target) target.style.display = 'block';
     }
 
-    // Muestra Gestión de Ventas por defecto
+    // 3. Mostrar Gestión de Ventas por defecto al cargar
     showSection('ventas');
 
-    // Submenú plegable de Gestión Operativa
+    // 4. Referencias a los toggles y submenús
     const toggleMenuOperativa = document.getElementById('toggle-menu-operativa');
-    const submenuOperativa = document.getElementById('submenu-operativa');
+    const submenuOperativa    = document.getElementById('submenu-operativa');
+
+    const toggleMenuCalidad   = document.getElementById('toggle-menu-calidad');
+    const submenuCalidad      = document.getElementById('submenu-calidad');
+
+    // 5. Evento clic para plegar/desplegar submenú Operativa
     toggleMenuOperativa.addEventListener('click', (e) => {
       e.preventDefault();
-      submenuOperativa.style.display = 
+      submenuOperativa.style.display =
         (submenuOperativa.style.display === 'block') ? 'none' : 'block';
     });
 
-    // Click en "Gestión de Ventas"
+    // 6. Evento clic para plegar/desplegar submenú Calidad
+    toggleMenuCalidad.addEventListener('click', (e) => {
+      e.preventDefault();
+      submenuCalidad.style.display =
+        (submenuCalidad.style.display === 'block') ? 'none' : 'block';
+    });
+
+    // 7. Enlace directo para "Gestión de Ventas"
     const linkVentas = document.querySelector('[data-section="ventas"]');
     linkVentas.addEventListener('click', (e) => {
       e.preventDefault();
       showSection('ventas');
     });
 
-    // Enlaces de Gestión Operativa
+    // 8. Enlaces del submenú Operativa
     document.querySelectorAll('#submenu-operativa li a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const sectionId = link.getAttribute('data-section');
+        showSection(sectionId);
+      });
+    });
+
+    // 9. Enlaces del submenú Calidad
+    document.querySelectorAll('#submenu-calidad li a').forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
         const sectionId = link.getAttribute('data-section');
@@ -241,3 +289,4 @@
   </script>
 </body>
 </html>
+
