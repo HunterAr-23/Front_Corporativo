@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+<script>
+  var password = prompt("Please enter the password:");
+  if (password !== "TuClave123") {
+    alert("Incorrect password. Access denied.");
+    window.location.href = "https://www.google.com"; // o simplemente no dejar avanzar
+  }
+</script>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
